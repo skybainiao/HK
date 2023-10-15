@@ -80,6 +80,8 @@
   let isHeartClickable = false;  // 默认为false
   let imageIndex = 0;
   const images = ["img/hellokitty.png", "img/hk1.png", "img/hk2.png", "img/hk3.png","img/hk4.png","img/hk5.png"]; // 添加你的图片URL
+  let isAnimating = false; // 动画锁
+
 
   let heart = document.getElementById('heartCanvas');
 
@@ -167,6 +169,9 @@
 
 
   function displayImage() {
+    if (isAnimating) return;  // 如果正在进行动画，直接返回
+
+    isAnimating = true;  // 开始动画
     // 隐藏之前的信息
     const previousMessage = document.getElementById("finalMessage");
     previousMessage.style.display = "none";
@@ -193,7 +198,10 @@
     // 延迟100ms后开始淡入，为了确保图片已经被加载
     setTimeout(() => {
       img.style.opacity = "1";
-    }, 100);
+      setTimeout(() => {
+        isAnimating = false;  // 动画结束
+      }, 5000);  // 这里的5000是动画持续的时间，与之前的设置匹配
+    }, 600);
 
     // 添加图片点击事件
     img.onclick = function() {
