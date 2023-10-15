@@ -81,6 +81,7 @@
   let imageIndex = 0;
   const images = ["img/hellokitty.png", "img/hk1.jpg", "img/hk2.jpg", "img/hk3.jpg","img/hk4.jpg","img/hk5.jpg"]; // 添加你的图片URL
   let isAnimating = false; // 动画锁
+  let imageTimeout; // 声明一个变量用于存放定时器
 
 
   let heart = document.getElementById('heartCanvas');
@@ -200,23 +201,41 @@
       img.style.opacity = "1";
       setTimeout(() => {
         isAnimating = false;  // 动画结束
-      }, 5000);  // 这里的5000是动画持续的时间，与之前的设置匹配
-    }, 600);
 
-    // 添加图片点击事件
-    img.onclick = function() {
-      imageIndex++;
-      if (imageIndex >= images.length) imageIndex = 0; // 循环到第一张图片
-      img.style.opacity = "0"; // 当前图片淡出
-      setTimeout(() => {
-        img.src = images[imageIndex]; // 更换图片
-        img.style.opacity = "1"; // 新图片淡入
-      }, 2000); // 延迟2秒，这与图片淡出的时间相同
-    };
+        // 设置定时器，每隔5秒自动切换图片
+        imageTimeout = setTimeout(function() {
+          switchToNextImage(img);
+        }, 2000);
+
+      }, 1000);  // 这里的2000是动画持续的时间，与之前的设置匹配
+    }, 600);
   }
 
+  function switchToNextImage(img) {
+    if (isAnimating) return; // 如果正在进行动画，直接返回
 
+    isAnimating = true;
+    img.style.opacity = "0"; // 当前图片淡出
 
+    setTimeout(() => {
+      imageIndex++;
+      if (imageIndex >= images.length) imageIndex = 0; // 循环到第一张图片
+
+      img.src = images[imageIndex]; // 更换图片
+
+      img.onload = function() {
+        img.style.opacity = "1"; // 新图片淡入
+        setTimeout(() => {
+          isAnimating = false; // 动画结束
+
+          // 重新设置定时器，以实现下一次图片切换
+          imageTimeout = setTimeout(function() {
+            switchToNextImage(img);
+          }, 2000);
+        }, 1000);
+      };
+    }, 2000);
+  }
 
 
 
