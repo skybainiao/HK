@@ -51,6 +51,11 @@
 
 <body onload="init()">
 
+<audio id="bgMusic" loop>
+  <source src="music/yydyg.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
 
 <div id="intro">
   <button class="heart-btn" onclick="showMessage()">❤️</button>
@@ -223,6 +228,10 @@
     canvas.style.display = 'block';
     // 定义缩放系数。这里我们取屏幕高度的1/4作为爱心的基本尺寸
     scaleFactor = canvas.height / 20 / 100; // 20是爱心原始的大约高度
+
+    // 开始播放音乐
+    const music = document.getElementById('bgMusic');
+    music.play();
 
     drawHeart();
 
