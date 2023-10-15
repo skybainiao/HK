@@ -141,6 +141,8 @@
 
     // 在此添加心形按钮
     const heartButton = document.createElement("button");
+    heartButton.id = "finalHeartButton";
+
     heartButton.className = "heart-btn";
     heartButton.innerHTML = "❤️";
     heartButton.style.position = "absolute";
@@ -161,8 +163,9 @@
     previousMessage.style.display = "none";
 
 
-    const heartButton = document.querySelector(".heart-btn");
-    heartButton.style.display = "none";
+    const finalHeartButton = document.getElementById("finalHeartButton");
+    finalHeartButton.style.display = "none";
+
 
     // 显示图片
     const imageUrl = "img/hellokitty.png";  // 替换为你的图片URL
