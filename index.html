@@ -25,18 +25,20 @@
 
     .heart-btn {
       display: inline-block;
-      padding: 10px 20px;
+      padding: 6px 12px;
       margin: 10px 0;
-      background-color: pink;
-      color: white;
-      border: none;
+      background-color: white; /* 更改背景颜色为白色 */
+      color: pink; /* 更改文字颜色为粉色，使其在白色背景上可见 */
+      border: 2px solid black; /* 添加黑色边框 */
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: background-color 0.2s, color 0.2s; /* 为背景和文字颜色添加过渡效果 */
     }
 
     .heart-btn:hover {
-      background-color: #ff66b2;
+      background-color: pink; /* 鼠标悬停时更改背景颜色为粉色 */
+      color: white; /* 鼠标悬停时更改文字颜色为白色 */
     }
+
 
     canvas {
       position: absolute;
@@ -180,7 +182,7 @@
 
     img.style.transform = "translate(-50%, -50%)";
     img.style.opacity = "0";  // 初始透明度为0
-    img.style.transition = "opacity 2s"; // 2秒内淡入
+    img.style.transition = "opacity 5s"; // 2秒内淡入
 
     document.body.appendChild(img);
 
