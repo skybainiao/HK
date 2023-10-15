@@ -78,6 +78,8 @@
   let canvas, ctx, t = 0, fillProgress = 0, snowflakes = [];
   let scaleFactor = 1;
   let isHeartClickable = false;  // 默认为false
+  let imageIndex = 0;
+  const images = ["img/hellokitty.png", "img/hk1.png", "img/hk2.png", "img/hk3.png","img/hk4.png","img/hk5.png"]; // 添加你的图片URL
 
   let heart = document.getElementById('heartCanvas');
 
@@ -165,38 +167,46 @@
 
 
   function displayImage() {
-
     // 隐藏之前的信息
     const previousMessage = document.getElementById("finalMessage");
     previousMessage.style.display = "none";
-
-
     const finalHeartButton = document.getElementById("finalHeartButton");
     finalHeartButton.style.display = "none";
 
-
     // 显示图片
-    const imageUrl = "img/hellokitty.png";  // 替换为你的图片URL
+    const imageUrl = images[imageIndex];
 
     const img = document.createElement("img");
+    img.id = "displayedImage";
     img.src = imageUrl;
     img.style.position = "absolute";
     img.style.top = "50%";
     img.style.left = "50%";
     img.style.width="85%";
     img.style.height="50%";
-
     img.style.transform = "translate(-50%, -50%)";
     img.style.opacity = "0";  // 初始透明度为0
-    img.style.transition = "opacity 5s"; // 2秒内淡入
+    img.style.transition = "opacity 2s"; // 2秒内淡入
 
     document.body.appendChild(img);
 
     // 延迟100ms后开始淡入，为了确保图片已经被加载
     setTimeout(() => {
       img.style.opacity = "1";
-    }, 600);
+    }, 100);
+
+    // 添加图片点击事件
+    img.onclick = function() {
+      imageIndex++;
+      if (imageIndex >= images.length) imageIndex = 0; // 循环到第一张图片
+      img.style.opacity = "0"; // 当前图片淡出
+      setTimeout(() => {
+        img.src = images[imageIndex]; // 更换图片
+        img.style.opacity = "1"; // 新图片淡入
+      }, 2000); // 延迟2秒，这与图片淡出的时间相同
+    };
   }
+
 
 
 
