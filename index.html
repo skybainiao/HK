@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iluvuLGQ</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      color: white;
+      font-size: 24px;
+    }
+
+    #intro {
+      text-align: center;
+    }
+
+    .heart-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px 0;
+      background-color: pink;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .heart-btn:hover {
+      background-color: #ff66b2;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
+    }
+  </style>
+</head>
+
+<body onload="init()">
+
+
+<div id="intro">
+  <button class="heart-btn" onclick="showMessage()">❤️</button>
+  <div id="message" style="display: none;">
+    <span id="helloWorld"></span>
+    <br>
+    <div id="apology" style="display: none;"></div>
+
+    <button class="heart-btn" onclick="showHeart()">❤️</button>
+  </div>
+</div>
+
+<canvas id="heartCanvas" onclick="checkClickOnHeart(event)"></canvas>
+
+
+
+<script>
+
+
+  let canvas, ctx, t = 0, fillProgress = 0, snowflakes = [];
+  let scaleFactor = 1;
+  let isHeartClickable = false;  // 默认为false
+
+  let heart = document.getElementById('heartCanvas');
+
+
+
+  function init() {
+    canvas = document.getElementById('heartCanvas');
+    ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+  }
+
+  function checkClickOnHeart(event) {
+    if (!isHeartClickable) return;  // 如果爱心不可点击，则直接返回
+    const x = event.clientX - canvas.width / 2;
+    const y = event.clientY - canvas.height / 2;
+
+    const heartWidth = 16 * 2 * 20 * scaleFactor;  // 16 * 2是大约的心形宽度
+    const heartHeight = 13 * 20 * scaleFactor;  // 13是大约的心形高度
+    if (x >= -heartWidth/2 && x <= heartWidth/2 && y >= -heartHeight/2 && y <= heartHeight/2) {
+      transitionToFinalScene();
+    }
+  }
+
+  function transitionToFinalScene() {
+    canvas.removeEventListener("click", checkClickOnHeart);
+
+    const transitionDuration = 2000;
+    let transitionProgress = 0;
+
+    function animateTransition() {
+      if (transitionProgress < transitionDuration) {
+        transitionProgress += 16;  // 60FPS => 每帧约16ms
+
+        const progress = transitionProgress / transitionDuration;
+
+        // 背景渐变到粉红色
+        document.body.style.backgroundColor = `rgba(${255 * progress}, ${192 * progress}, ${203 * progress}, 1)`;
+
+        requestAnimationFrame(animateTransition);
+      } else {
+        canvas.style.display = "none";
+        displayFinalMessage();
+      }
+    }
+
+    animateTransition();
+  }
+
+  function displayFinalMessage() {
+    const message = document.createElement("div");
+    message.id = "finalMessage";
+    message.innerHTML = "Jeg elsker dig,LGQ!";
+    message.style.position = "absolute";
+    message.style.top = "40%";
+    message.style.left = "35%";
+    message.style.transform = "translate(-50%, -50%)";
+    message.style.fontSize = "1em";
+    message.style.opacity = "0";
+    message.style.transition = "opacity 2s";
+
+    document.body.appendChild(message);
+
+    setTimeout(() => {
+      message.style.opacity = "1";
+    }, 100);
+
+    // 在此添加心形按钮
+    const heartButton = document.createElement("button");
+    heartButton.className = "heart-btn";
+    heartButton.innerHTML = "❤️";
+    heartButton.style.position = "absolute";
+    heartButton.style.top = "47%";
+    heartButton.style.left = "75%";
+    heartButton.style.transform = "translateX(-50%)";
+
+    document.body.appendChild(heartButton);
+
+    // 此处添加事件监听
+    heartButton.onclick = displayImage;
+  }
+
+
+  function displayImage() {
+    // 隐藏之前的信息
+    const previousMessage = document.getElementById("finalMessage");
+    previousMessage.style.display = "none";
+
+
+    const heartButton = document.querySelector(".heart-btn");
+    heartButton.style.display = "none";
+
+    // 显示图片
+    const imageUrl = "img/hellokitty.png";  // 替换为你的图片URL
+
+    const img = document.createElement("img");
+    img.src = imageUrl;
+    img.style.position = "absolute";
+    img.style.top = "50%";
+    img.style.left = "50%";
+    img.style.width="85%";
+    img.style.height="50%";
+
+    img.style.transform = "translate(-50%, -50%)";
+    img.style.opacity = "0";  // 初始透明度为0
+    img.style.transition = "opacity 2s"; // 2秒内淡入
+
+    document.body.appendChild(img);
+
+    // 延迟100ms后开始淡入，为了确保图片已经被加载
+    setTimeout(() => {
+      img.style.opacity = "1";
+    }, 600);
+  }
+
+
+
+
+
+  function showMessage() {
+    console.log("showMessage function called!");  // 添加日志输出
+
+    document.getElementById('intro').querySelector('.heart-btn').style.display = 'none';
+
+    const targetText = "Hello, World";
+    let index = 0;
+
+    function typeText() {
+      if (index < targetText.length) {
+        document.getElementById('helloWorld').textContent += targetText[index];
+        index++;
+        setTimeout(typeText, 150);  // 设置字母出现的速度，此处为150ms
+      } else {
+        document.getElementById('apology').style.display = 'block';
+      }
+    }
+
+    typeText();
+    document.getElementById('message').style.display = 'block';
+  }
+
+  function showHeart() {
+    document.getElementById('intro').style.display = 'none';
+    canvas.style.display = 'block';
+    // 定义缩放系数。这里我们取屏幕高度的1/4作为爱心的基本尺寸
+    scaleFactor = canvas.height / 20 / 100; // 20是爱心原始的大约高度
+
+    drawHeart();
+
+    // 5秒后设置爱心为可点击
+    setTimeout(() => {
+      isHeartClickable = true;
+    }, 5000);  // 5秒
+
+  }
+
+  function drawHeart() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (fillProgress < 1) {
+      drawFilledHeart(fillProgress);
+      fillProgress += 0.007;
+      requestAnimationFrame(drawHeart);
+    } else {
+      drawFilledHeart(1);
+      startSnowfall();
+    }
+  }
+
+  function drawFilledHeart(progress) {
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, canvas.height / 2);
+    for (let theta = 0; theta <= 2 * Math.PI; theta += 0.01) {
+      const x = 16 * Math.sin(theta) * Math.sin(theta) * Math.sin(theta) * 20 * scaleFactor;
+      const y = -(13 * Math.cos(theta) - 5 * Math.cos(2 * theta) - 2 * Math.cos(3 * theta) - Math.cos(4 * theta)) * 20 * scaleFactor;
+      ctx.lineTo(canvas.width / 2 + x, canvas.height / 2 + y);
+    }
+    ctx.closePath();
+
+    ctx.fillStyle = `rgba(255, 192, 203, ${progress})`;  // 粉红色，并根据progress设置透明度
+    ctx.fill();
+  }
+
+  function startSnowfall() {
+    setInterval(createSnowflake, 100);
+    animateSnowflakes();
+  }
+
+  function createSnowflake() {
+    let size = Math.random() * 3 + 2;
+    snowflakes.push({
+      x: Math.random() * canvas.width,
+      y: 0,
+      size: size * scaleFactor,
+      speed: (Math.random() * 3 + 1) * scaleFactor,
+      angle: Math.random() * Math.PI * 2
+    });
+  }
+
+  function animateSnowflakes() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawFilledHeart(1);
+
+    snowflakes.forEach((flake, index) => {
+      drawSnowflake(flake.x, flake.y, flake.size, flake.angle);
+      flake.y += flake.speed;
+      flake.angle += Math.random() * 0.05 - 0.025;
+
+      if (flake.y > canvas.height) {
+        snowflakes.splice(index, 1);
+      }
+    });
+
+    requestAnimationFrame(animateSnowflakes);
+  }
+
+  function drawSnowflake(x, y, size, angle) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2 * scaleFactor;
+    ctx.beginPath();
+
+    // Draw 6 arms of the snowflake
+    for (let i = 0; i < 6; i++) {
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, size);
+      ctx.translate(0, size);
+      ctx.lineTo(-size / 4, 0);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(size / 4, 0);
+      ctx.translate(0, -size);
+      ctx.rotate(Math.PI / 3);
+    }
+
+    ctx.stroke();
+    ctx.restore();
+  }
+
+</script>
+</body>
+
+</html>
